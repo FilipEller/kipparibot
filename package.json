@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "webhook:set": "node setWebhook.js",
+    "webhook:set": "ts-node setWebhook.ts",
     "start": "node build/index.js",
     "start:webhook": "npm run webhook:set && npm start",
     "dev": "ts-node index.ts",

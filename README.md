@@ -21,7 +21,7 @@ On a web host:
 
 For development on localhost:
 1. Start a terminal
-2. `ngrok http 5000`
+2. `ngrok http 4000`
 3. Store the ngrok server's address in the file `.env` file as SERVER_URL
 4. Start a new terminal in the project root
 5. `npm install`
