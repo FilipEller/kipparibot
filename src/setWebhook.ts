@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
-dotenv.config();
 import axios from 'axios';
+
+dotenv.config();
 
 const { TOKEN, SERVER_URL } = process.env;
 if (!TOKEN) {
@@ -17,13 +18,12 @@ const URI = `/webhook/${TOKEN}`;
 const WEBHOOK_URL = SERVER_URL + URI;
 
 const main = async () => {
-  console.log(`${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`);
   const res = await axios.post(`${TELEGRAM_API}/setWebhook?url=${WEBHOOK_URL}`);
   console.log(res.data?.description);
 };
 
 try {
-  void main();
+  main();
 } catch (error) {
   console.error(error);
 }

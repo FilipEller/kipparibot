@@ -1,0 +1,41 @@
+module.exports = {
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: 'tsconfig.json',
+  },
+  env: {
+    es6: true,
+  },
+  extends: [
+    'airbnb-base',
+    'airbnb-typescript/base',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'prettier/prettier',
+  ],
+  plugins: ['@typescript-eslint', 'import'],
+  rules: {
+    '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
+    'no-console': 'off',
+    'comma-dangle': 'off',
+    '@typescript-eslint/comma-dangle': 'off',
+    'no-await-in-loop': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'warn',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-use-before-define': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'import/dynamic-import-chunkname': 'error',
+    'no-nested-ternary': 'off',
+    'no-param-reassign': [
+      'error',
+      { ignorePropertyModificationsFor: ['draftState'] },
+    ],
+    'import/no-relative-packages': 'off',
+    'class-methods-use-this': 'off',
+  },
+  ignorePatterns: ['.eslintrc.js'],
+};
