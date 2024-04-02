@@ -35,6 +35,7 @@ module.exports = {
       { ignorePropertyModificationsFor: ['draftState'] },
     ],
     'import/no-relative-packages': 'off',
+    'import/prefer-default-export': 'off',
     'class-methods-use-this': 'off',
   },
   ignorePatterns: ['.eslintrc.js'],
