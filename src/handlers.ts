@@ -1,31 +1,6 @@
 import { RequestHandler } from 'express';
-import axios from 'axios';
-
-interface Update {
-  message: {
-    text: string;
-    chat: {
-      id: string;
-      type: string;
-    };
-  };
-}
-
-const { TOKEN } = process.env;
-const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
-
-const sendMessage = async (text: string, chat_id: string) => {
-  try {
-    const res = (await axios.post(`${TELEGRAM_API}/sendMessage`, {
-      text,
-      chat_id,
-    })) as unknown;
-    return res;
-  } catch (e: unknown) {
-    console.error(e);
-    return null;
-  }
-};
+import { getUsers } from './services/UserService';
+import { getMessages, sendMessage } from './services/MessageService';
 
 const handleRoot: RequestHandler = (_, res) => {
   res.send(
@@ -34,15 +9,48 @@ const handleRoot: RequestHandler = (_, res) => {
 };
 
 const handleUpdate: RequestHandler = async (req, res) => {
-  const update = req.body as Update;
+  const update = req.body as MessageUpdate;
   console.log(update);
 
   if (update.message) {
     const { message } = update;
     const { text, chat } = message;
-    const { id } = chat;
+    const { id: senderChatId } = chat;
 
-    await sendMessage(text, id);
+    try {
+      const users = await getUsers();
+
+      if (!users.id) {
+        // User does not exist
+        // TODO: add user and handle this case
+        return res.status(401).send({ error: 'unknown user' });
+      }
+
+      if (message.reply_to_message) {
+        const messages = await getMessages();
+        const messageBeingRepliedTo =
+          messages[message.reply_to_message.message_id];
+        if (messageBeingRepliedTo) {
+          if (messageBeingRepliedTo.receiverChatId === senderChatId) {
+            await sendMessage(text, messageBeingRepliedTo.senderChatId);
+          } else {
+            return res
+              .status(403)
+              .send({ error: 'replied to message received by someone else' });
+          }
+        } else {
+          return res
+            .status(404)
+            .send({ error: 'replied to unknown message able' });
+        }
+      } else {
+        await sendMessage(text, senderChatId);
+      }
+    } catch {
+      // TODO: Create error handler function that replies to both message sender and client
+      return res.status(500).send({ error: 'not able to fetch users' });
+    }
+
     return res.send();
   }
 
