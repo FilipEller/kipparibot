@@ -1,32 +1,33 @@
-interface User {
+export interface User {
   userId: number;
   isContactPerson: boolean;
   isAdmin: boolean;
 }
 
-interface Contacter extends User {
+export interface Contacter extends User {
   isContactPerson: false;
 }
 
-interface ContactPerson extends User {
+export interface ContactPerson extends User {
+  isContactPerson: true;
   firstName: string;
   lastName: string;
   username: string;
-  isContactPerson: true;
 }
 
-interface Session {
-  contacterChatId: string;
-  contactedPeopleChatIds: string[];
+export interface Session {
+  contacterId: number;
+  contacterPseudonym: string;
+  contactedPeopleIds: number[];
 }
 
-interface ForwardedMessage {
+export interface ForwardedMessage {
   messageId: number;
   senderChatId: number;
   receiverChatId: number;
 }
 
-interface MessageUpdate {
+export interface MessageUpdate {
   update_id: number;
   message: {
     message_id: number;

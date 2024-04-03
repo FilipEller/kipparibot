@@ -17,7 +17,7 @@ On a web host:
 1. Start a terminal in the project root
 2. `npm install`
 3. `npm run webhook:set`
-4. `run npm start`
+4. `npm start`
 
 For development on localhost:
 1. Start a terminal
