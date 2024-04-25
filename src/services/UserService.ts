@@ -1,32 +1,17 @@
-import { contactPersons, contacters, users } from '../../mockData';
-import { ContactPerson, Contacter, User } from '../types';
+import User from '../models/User';
 
-const getContactPersons: () => Promise<
-  Record<string, ContactPerson>
-> = async () => Object.fromEntries(contactPersons.map(x => [x.userId, x]));
+const getContactPersons: () => Promise<Record<number, User>> = async () => {
+  const contactPersons = await User.findAll({
+    where: { isContactPerson: true },
+  });
+  return Object.fromEntries(contactPersons.map(x => [x.id, x]));
+};
 
-const getUsers: () => Promise<Record<string, User>> = async () =>
-  Object.fromEntries(users.map(x => [x.userId, x]));
-
-const getUser: (id: number) => Promise<User | undefined> = async (id: number) =>
-  users.find(u => u.userId === id);
-
-const getDefaultContactPerson = () => contactPersons[0];
+const getUser: (id: number) => Promise<User | null> = async (id: number) =>
+  User.findByPk(id);
 
 const addUser: (id: number) => Promise<User> = async (id: number) => {
-  const newUser: Contacter = {
-    userId: id,
-    isContactPerson: false,
-    isAdmin: false,
-  };
-  contacters.push(newUser);
-  return newUser;
+  return User.create({ id, isContactPerson: false, isAdmin: false });
 };
 
-export {
-  getContactPersons,
-  getUsers,
-  getUser,
-  addUser,
-  getDefaultContactPerson,
-};
+export { getContactPersons, getUser, addUser };

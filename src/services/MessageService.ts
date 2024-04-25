@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { messages } from '../../mockData';
 import { ForwardedMessage } from '../types';
+import { TOKEN } from '../../config/envConfig';
 
 interface MessageResponse {
   data: {
@@ -15,7 +16,6 @@ interface MessageResponse {
   };
 }
 
-const { TOKEN } = process.env;
 const TELEGRAM_API = `https://api.telegram.org/bot${TOKEN}`;
 
 const getMessages: () => Promise<

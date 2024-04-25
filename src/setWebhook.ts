@@ -1,9 +1,6 @@
-import dotenv from 'dotenv';
 import axios from 'axios';
+import { TOKEN, SERVER_URL } from '../config/envConfig';
 
-dotenv.config();
-
-const { TOKEN, SERVER_URL } = process.env;
 if (!TOKEN) {
   console.error('Telegram bot token required. Exiting...');
   process.exit(1);

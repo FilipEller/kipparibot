@@ -1,11 +1,7 @@
 import { RequestHandler } from 'express';
-import {
-  addUser,
-  getDefaultContactPerson,
-  getUser,
-} from './services/UserService';
+import { addUser, getContactPersons, getUser } from './services/UserService';
 import { getMessages, sendMessage } from './services/MessageService';
-import { ContactPerson, MessageUpdate } from './types';
+import { MessageUpdate } from './types';
 
 const handleRoot: RequestHandler = (_, res) => {
   res.send(
@@ -45,9 +41,7 @@ const handleUpdate: RequestHandler = async (req, res) => {
           if (messageBeingRepliedTo) {
             if (messageBeingRepliedTo.receiverChatId === senderId) {
               await sendMessage(
-                `${(sender as ContactPerson).firstName} ${
-                  (sender as ContactPerson).lastName
-                }\n\n${text}`,
+                `${sender.firstName} ${sender.lastName}\n\n${text}`,
                 messageBeingRepliedTo.senderChatId,
                 senderId,
               );
@@ -69,10 +63,11 @@ const handleUpdate: RequestHandler = async (req, res) => {
       // TODO: check if user has an ongoing session
 
       console.log('sending message to default contact person');
-      await sendMessage(
-        `Banana-1234\n\n${text}`,
-        getDefaultContactPerson().userId,
-        senderId,
+      const contactPersons = await getContactPersons();
+      await Promise.all(
+        Object.values(contactPersons).map(async contactPerson =>
+          sendMessage(`Banana-1234\n\n${text}`, contactPerson.id, senderId),
+        ),
       );
       return res.status(200).send({ error: 'message sent' });
     } catch (e) {
